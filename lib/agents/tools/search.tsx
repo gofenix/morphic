@@ -76,6 +76,9 @@ async function tavilySearch(
   }
 
   const data = await response.json()
+
+  console.log('tavilySearch -> ', data)
+
   return data
 }
 

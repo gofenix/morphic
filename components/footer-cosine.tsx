@@ -24,11 +24,9 @@ const Footer: React.FC = () => {
           size={'icon'}
           className="text-muted-foreground/50 w-full"
         >
-          <Link href="https://beian.miit.gov.cn/" target="_blank">
-            <span className="text-xs">
-              沪ICP备2024055394号-1 © 2024 上海余弦魔塔科技有限公司
-            </span>
-          </Link>
+          <span className="text-xs">
+            沪ICP备2024055394号-1 © 2024 上海余弦魔塔科技有限公司
+          </span>
         </Button>
 
         <Button

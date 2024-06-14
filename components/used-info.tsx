@@ -24,5 +24,9 @@ export default function UsedInfo() {
     getUsed()
   }, [])
 
-  return <div className="text-xs px-1">已消耗{count}点数</div>
+  return (
+    <div className="text-xs px-1 text-muted-foreground/50">
+      已消耗{count}点数
+    </div>
+  )
 }

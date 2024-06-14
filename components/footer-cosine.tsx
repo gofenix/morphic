@@ -17,22 +17,18 @@ import {
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-fit p-1 md:p-2 fixed bottom-0 right-0">
+    <footer className="w-fit p-1 md:p-2 fixed bottom-0 right-0 hidden md:block">
       <div className="flex justify-end items-center">
-        <Button
-          variant={'ghost'}
-          size={'icon'}
-          className="text-muted-foreground/50 w-full"
-        >
+        <div className="text-muted-foreground/50 w-full">
           <span className="text-xs">
             沪ICP备2024055394号-1 © 2024 上海余弦魔塔科技有限公司
           </span>
-        </Button>
+        </div>
 
         <Button
           variant={'ghost'}
           size={'icon'}
-          className="text-muted-foreground/50"
+          className="text-muted-foreground/50 text-blue-500"
         >
           <Link
             href="https://www.xiaohongshu.com/user/profile/66375ae9000000000b031c9b?xhsshare=CopyLink&appuid=604a31040000000001004520&apptime=1717772927&wechatWid=c6867a08d6fe23aa6dee925c4cdf57b4&wechatOrigin=menu"
@@ -47,7 +43,7 @@ const Footer: React.FC = () => {
             <Button
               variant={'ghost'}
               size={'icon'}
-              className="text-muted-foreground/50"
+              className="text-muted-foreground/50 text-blue-500"
             >
               <SiWechat size={18} />
             </Button>

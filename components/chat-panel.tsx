@@ -64,7 +64,7 @@ export function ChatPanel({ messages, query }: ChatPanelProps) {
       data: { user }
     } = await supabase.auth.getUser()
     if (!user) {
-      alert('Please login first!')
+      alert('请先使用邮箱注册或登录使用!')
       router.push('/login')
       return
     }

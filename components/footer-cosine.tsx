@@ -28,13 +28,13 @@ const Footer: React.FC = () => {
         <Button
           variant={'ghost'}
           size={'icon'}
-          className="text-muted-foreground/50 text-blue-500"
+          className="text-muted-foreground/50 text-red-500"
         >
           <Link
             href="https://www.xiaohongshu.com/user/profile/66375ae9000000000b031c9b?xhsshare=CopyLink&appuid=604a31040000000001004520&apptime=1717772927&wechatWid=c6867a08d6fe23aa6dee925c4cdf57b4&wechatOrigin=menu"
             target="_blank"
           >
-            <SiXiaohongshu size={18} />
+            <SiXiaohongshu size={20} />
           </Link>
         </Button>
 
@@ -43,7 +43,7 @@ const Footer: React.FC = () => {
             <Button
               variant={'ghost'}
               size={'icon'}
-              className="text-muted-foreground/50 text-blue-500"
+              className="text-muted-foreground/50 text-green-500"
             >
               <SiWechat size={18} />
             </Button>

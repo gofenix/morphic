@@ -10,7 +10,7 @@ import { Button } from './ui/button'
 import { ArrowRight, Plus } from 'lucide-react'
 import { EmptyScreen } from './empty-screen'
 import Textarea from 'react-textarea-autosize'
-import { nanoid } from 'ai'
+import { generateId } from 'ai'
 import { useAppState } from '@/lib/utils/app-state'
 import Image from 'next/image'
 import MoreTools from './more-tool'
@@ -25,7 +25,7 @@ export function ChatPanel({ messages, query }: ChatPanelProps) {
   const [input, setInput] = useState('')
   const [showEmptyScreen, setShowEmptyScreen] = useState(false)
   const [, setMessages] = useUIState<typeof AI>()
-  const [aiMessage] = useAIState<typeof AI>()
+  const [aiMessage, setAIMessage] = useAIState<typeof AI>()
   const { isGenerating, setIsGenerating } = useAppState()
   const { submit } = useActions()
   const router = useRouter()
@@ -40,7 +40,7 @@ export function ChatPanel({ messages, query }: ChatPanelProps) {
     setMessages(currentMessages => [
       ...currentMessages,
       {
-        id: nanoid(),
+        id: generateId(),
         component: <UserMessage message={query} />
       }
     ])
@@ -102,6 +102,7 @@ export function ChatPanel({ messages, query }: ChatPanelProps) {
   const handleClear = () => {
     setIsGenerating(false)
     setMessages([])
+    setAIMessage({ messages: [], chatId: '' })
     setInput('')
     router.push('/')
   }

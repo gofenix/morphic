@@ -4,6 +4,7 @@ import { getTools } from './tools'
 import { getModel, transformToolMessages } from '../utils'
 import { AnswerSection } from '@/components/answer-section'
 import researcherPrompt from '@/prompts/researcher'
+import { AnswerSectionGenerated } from '@/components/answer-section-generated'
 
 export async function researcher(
   uiStream: ReturnType<typeof createStreamableUI>,
@@ -35,7 +36,14 @@ export async function researcher(
     tools: getTools({
       uiStream,
       fullResponse
-    })
+    }),
+    onFinish: event => {
+      // If the response is generated, update the generated answer section
+      // There is a bug where a new instance of the answer section is displayed once when the next section is added
+      if (event.text.length > 0) {
+        uiStream.update(<AnswerSectionGenerated result={event.text} />)
+      }
+    }
   }).catch(err => {
     hasError = true
     fullResponse = 'Error: ' + err.message

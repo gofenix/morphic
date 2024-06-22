@@ -4,7 +4,6 @@ import { getTools } from './tools'
 import { getModel, transformToolMessages } from '../utils'
 import { AnswerSection } from '@/components/answer-section'
 import researcherPrompt from '@/prompts/researcher'
-import { AnswerSectionGenerated } from '@/components/answer-section-generated'
 
 export async function researcher(
   uiStream: ReturnType<typeof createStreamableUI>,

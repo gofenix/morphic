@@ -80,17 +80,17 @@ export function ChatPanel({ messages, query }: ChatPanelProps) {
         ])
         .select()
     }
-    // if (user.is_anonymous) {
-    //   const { data } = await supabase
-    //     .from('morphic_used')
-    //     .select()
-    //     .eq('user_id', user.id)
+    if (user.is_anonymous) {
+      const { data } = await supabase
+        .from('morphic_used')
+        .select()
+        .eq('user_id', user.id)
 
-    //   if (data?.length && data.length > 3) {
-    //     alert('游客试用已结束，请绑定邮箱使用!')
-    //     router.push('/login')
-    //   }
-    // }
+      if (data?.length && data.length > 3) {
+        alert('游客试用已结束，请绑定邮箱使用!')
+        router.push('/login')
+      }
+    }
   }
 
   // if query is not empty, submit the query

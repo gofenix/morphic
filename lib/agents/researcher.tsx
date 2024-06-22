@@ -9,11 +9,11 @@ import { AnswerSectionGenerated } from '@/components/answer-section-generated'
 export async function researcher(
   uiStream: ReturnType<typeof createStreamableUI>,
   streamableText: ReturnType<typeof createStreamableValue<string>>,
-  messages: CoreMessage[],
-  useSpecificModel?: boolean
+  messages: CoreMessage[]
 ) {
   let fullResponse = ''
   let hasError = false
+  let finishReason = ''
 
   // Transform the messages if using Ollama provider
   let processedMessages = messages
@@ -26,7 +26,9 @@ export async function researcher(
   const includeToolResponses = messages.some(message => message.role === 'tool')
   const useSubModel = useOllamaProvider && includeToolResponses
 
-  const answerSection = <AnswerSection result={streamableText.value} />
+  const streambleAnswer = createStreamableValue<string>('')
+  const answerSection = <AnswerSection result={streambleAnswer.value} />
+
   const currentDate = new Date().toLocaleString()
   const result = await streamText({
     model: getModel(useSubModel),
@@ -37,12 +39,10 @@ export async function researcher(
       uiStream,
       fullResponse
     }),
-    onFinish: event => {
-      // If the response is generated, update the generated answer section
-      // There is a bug where a new instance of the answer section is displayed once when the next section is added
-      if (event.text.length > 0) {
-        uiStream.update(<AnswerSectionGenerated result={event.text} />)
-      }
+    onFinish: async event => {
+      finishReason = event.finishReason
+      fullResponse = event.text
+      streambleAnswer.done()
     }
   }).catch(err => {
     hasError = true
@@ -55,8 +55,10 @@ export async function researcher(
     return { result, fullResponse, hasError, toolResponses: [] }
   }
 
-  // Remove the spinner
-  uiStream.update(null)
+  const hasToolResult = messages.some(message => message.role === 'tool')
+  if (hasToolResult) {
+    uiStream.append(answerSection)
+  }
 
   // Process the response
   const toolCalls: ToolCallPart[] = []
@@ -65,24 +67,18 @@ export async function researcher(
     switch (delta.type) {
       case 'text-delta':
         if (delta.textDelta) {
-          // If the first text delta is available, add a UI section
-          if (fullResponse.length === 0 && delta.textDelta.length > 0) {
-            // Update the UI
-            uiStream.update(answerSection)
-          }
-
           fullResponse += delta.textDelta
-          streamableText.update(fullResponse)
+          if (hasToolResult) {
+            streambleAnswer.update(fullResponse)
+          } else {
+            streamableText.update(fullResponse)
+          }
         }
         break
       case 'tool-call':
         toolCalls.push(delta)
         break
       case 'tool-result':
-        // Append the answer section if the specific model is not used
-        if (!useSpecificModel && toolResponses.length === 0 && delta.result) {
-          uiStream.append(answerSection)
-        }
         if (!delta.result) {
           hasError = true
         }
@@ -105,5 +101,5 @@ export async function researcher(
     messages.push({ role: 'tool', content: toolResponses })
   }
 
-  return { result, fullResponse, hasError, toolResponses }
+  return { result, fullResponse, hasError, toolResponses, finishReason }
 }

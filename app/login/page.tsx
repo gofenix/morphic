@@ -30,6 +30,21 @@ export default function Login({
     return redirect('/')
   }
 
+  const signInByGuest = async (formData: FormData) => {
+    'use server'
+
+    const supabase = createClient()
+    const { error } = await supabase.auth.signInAnonymously()
+
+    if (error) {
+      return redirect(
+        `/login?message=${encodeURIComponent('用户名或密码错误')}`
+      )
+    }
+
+    return redirect('/')
+  }
+
   const signUp = async (formData: FormData) => {
     'use server'
 
@@ -100,6 +115,13 @@ export default function Login({
             pendingText="注册中..."
           >
             注册
+          </SubmitButton>
+          <SubmitButton
+            formAction={signInByGuest}
+            className="border border-foreground/20 rounded-md px-4 py-2 text-foreground mb-2"
+            pendingText="登录中..."
+          >
+            游客登录
           </SubmitButton>
           {searchParams?.message && (
             <p className="mt-4 p-4 bg-foreground/10 text-foreground text-center">

@@ -64,7 +64,7 @@ export function ChatPanel({ messages, query }: ChatPanelProps) {
       data: { user }
     } = await supabase.auth.getUser()
     if (!user) {
-      alert('请先使用邮箱注册或登录使用!')
+      alert('请先使用登录使用!')
       router.push('/login')
       return
     }
@@ -80,6 +80,17 @@ export function ChatPanel({ messages, query }: ChatPanelProps) {
         ])
         .select()
     }
+    // if (user.is_anonymous) {
+    //   const { data } = await supabase
+    //     .from('morphic_used')
+    //     .select()
+    //     .eq('user_id', user.id)
+
+    //   if (data?.length && data.length > 3) {
+    //     alert('游客试用已结束，请绑定邮箱使用!')
+    //     router.push('/login')
+    //   }
+    // }
   }
 
   // if query is not empty, submit the query

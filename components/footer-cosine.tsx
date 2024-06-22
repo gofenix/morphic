@@ -50,7 +50,9 @@ const Footer: React.FC = () => {
           </PopoverTrigger>
           <PopoverContent>
             <Image
-              src={'/wechat.jpg'}
+              src={
+                'https://lkgesolebdfrrtuuivbm.supabase.co/storage/v1/object/public/public_assets/help.jpeg'
+              }
               width={'0'}
               height={'0'}
               alt="MagickPen logo"

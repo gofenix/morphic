@@ -2,6 +2,7 @@ import { redirect } from 'next/navigation'
 import { SubmitButton } from './submit-button'
 import { headers } from 'next/headers'
 import { createClient } from '@/utils/supabase/server'
+import Image from 'next/image'
 
 export default function Login({
   searchParams
@@ -58,7 +59,16 @@ export default function Login({
     <div className="bg-background text-foreground min-h-screen flex flex-col items-center">
       <div className="flex-1 flex flex-col w-full px-8 sm:max-w-md justify-center gap-2">
         <form className="animate-in flex-1 flex flex-col w-full justify-center gap-2 text-foreground">
-          <label className="text-md" htmlFor="email">
+          <h1 className="animate-in text-slate-700 font-bold text-2xl mb-12 flex items-center gap-3 dark:text-slate-400">
+            <Image
+              src={'/logo.png'}
+              width="32"
+              height="32"
+              alt="MagickPen logo"
+            />
+            余弦法律：AI全网分析引擎
+          </h1>
+          <label className="text-md font-bold" htmlFor="email">
             邮箱
           </label>
           <input
@@ -67,7 +77,7 @@ export default function Login({
             placeholder="you@example.com"
             required
           />
-          <label className="text-md" htmlFor="password">
+          <label className="text-md font-bold" htmlFor="password">
             密码
           </label>
           <input

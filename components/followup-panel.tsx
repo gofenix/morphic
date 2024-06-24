@@ -7,6 +7,7 @@ import { useActions, useUIState } from 'ai/rsc'
 import type { AI } from '@/app/actions'
 import { UserMessage } from './user-message'
 import { ArrowRight } from 'lucide-react'
+import { createClient } from '@/utils/supabase/client'
 
 export function FollowupPanel() {
   const [input, setInput] = useState('')
@@ -31,6 +32,24 @@ export function FollowupPanel() {
     ])
 
     setInput('')
+
+    const supabase = createClient()
+    const {
+      data: { user }
+    } = await supabase.auth.getUser()
+
+    if (user) {
+      await supabase
+        .from('morphic_used')
+        .insert([
+          {
+            user_id: user.id,
+            email: user.email,
+            send_message: input
+          }
+        ])
+        .select()
+    }
   }
 
   return (
@@ -41,7 +60,7 @@ export function FollowupPanel() {
       <Input
         type="text"
         name="input"
-        placeholder="Ask a follow-up question..."
+        placeholder="进一步提问..."
         value={input}
         className="pr-14 h-12"
         onChange={e => setInput(e.target.value)}

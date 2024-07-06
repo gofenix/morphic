@@ -25,8 +25,13 @@ export default function UsedInfo() {
   }, [])
 
   return (
-    <div className="text-xs px-1 text-muted-foreground/50">
-      已消耗{count}点数
+    <div className=" px-1 font-bold text-white">
+      <a
+        href="https://afdian.net/order/create?plan_id=42d8aee03a6b11ef9c0352540025c377&product_type=0&remark="
+        className="bg-gradient-to-r hover:from-green-400 hover:to-blue-500 from-pink-500 to-yellow-500"
+      >
+        已消耗{count}积分，点此获取更多~
+      </a>
     </div>
   )
 }

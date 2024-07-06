@@ -19,12 +19,11 @@ const Footer: React.FC = () => {
   return (
     <footer className="w-fit p-1 md:p-2 fixed bottom-0 right-0 hidden md:block">
       <div className="flex justify-end items-center">
-        <div className="text-muted-foreground/50 w-full">
+        <div className="text-muted-foreground/50">
           <span className="text-xs">
             沪ICP备2024055394号-1 © 2024 上海余弦魔塔科技有限公司
           </span>
         </div>
-
         <Button
           variant={'ghost'}
           size={'icon'}
@@ -61,6 +60,17 @@ const Footer: React.FC = () => {
             ></Image>
           </PopoverContent>
         </Popover>
+
+        <a
+          href="https://afdian.net/order/create?plan_id=42d8aee03a6b11ef9c0352540025c377&product_type=0&remark="
+          className="text-muted-foreground/50"
+        >
+          <img
+            src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png"
+            alt=""
+            width={100}
+          />
+        </a>
       </div>
     </footer>
   )

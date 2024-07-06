@@ -154,7 +154,13 @@ export function ChatPanel({ messages, query }: ChatPanelProps) {
       }
     >
       <h1 className="animate-in text-slate-700 font-bold text-2xl mb-12 flex items-center gap-3 dark:text-slate-400">
-        <Image src={'/logo.png'} width="32" height="32" alt="MagickPen logo" />
+        <Image
+          src={'/logo.png'}
+          className="animate-bounce"
+          width="32"
+          height="32"
+          alt="MagickPen logo"
+        />
         余弦法律：AI全网分析引擎
       </h1>
       <form onSubmit={handleSubmit} className="max-w-2xl w-full px-6">

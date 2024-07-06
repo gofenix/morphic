@@ -63,7 +63,7 @@ const Footer: React.FC = () => {
 
         <a
           href="https://afdian.net/order/create?plan_id=42d8aee03a6b11ef9c0352540025c377&product_type=0&remark="
-          className="text-muted-foreground/50"
+          className="text-muted-foreground/50 animate-pulse"
         >
           <img
             src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png"

@@ -19,6 +19,7 @@ export async function researcher(
   const useOllamaProvider = !!(
     process.env.OLLAMA_MODEL && process.env.OLLAMA_BASE_URL
   )
+  const useAnthropicProvider = !!process.env.ANTHROPIC_API_KEY
   if (useOllamaProvider) {
     processedMessages = transformToolMessages(messages)
   }
@@ -55,7 +56,7 @@ export async function researcher(
   }
 
   const hasToolResult = messages.some(message => message.role === 'tool')
-  if (hasToolResult) {
+  if (!useAnthropicProvider || hasToolResult) {
     uiStream.append(answerSection)
   }
 
@@ -67,10 +68,10 @@ export async function researcher(
       case 'text-delta':
         if (delta.textDelta) {
           fullResponse += delta.textDelta
-          if (hasToolResult) {
-            streambleAnswer.update(fullResponse)
-          } else {
+          if (useAnthropicProvider && !hasToolResult) {
             streamableText.update(fullResponse)
+          } else {
+            streambleAnswer.update(fullResponse)
           }
         }
         break

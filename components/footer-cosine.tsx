@@ -62,7 +62,7 @@ const Footer: React.FC = () => {
         </Popover>
 
         <a
-          href="https://afdian.net/order/create?plan_id=42d8aee03a6b11ef9c0352540025c377&product_type=0&remark="
+          href="https://afdian.com/order/create?plan_id=42d8aee03a6b11ef9c0352540025c377&product_type=0&remark="
           className="text-muted-foreground/50 animate-pulse"
         >
           <img

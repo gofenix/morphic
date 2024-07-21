@@ -27,7 +27,7 @@ export default function UsedInfo() {
   return (
     <div className="flex flex-row px-1 font-bold text-white animate-pulse">
       <a
-        href="https://afdian.net/order/create?plan_id=42d8aee03a6b11ef9c0352540025c377&product_type=0&remark="
+        href="https://afdian.com/order/create?plan_id=42d8aee03a6b11ef9c0352540025c377&product_type=0&remark="
         className="bg-gradient-to-r hover:from-green-400 hover:to-blue-500 from-pink-500 to-yellow-500"
       >
         已消耗{count}积分~

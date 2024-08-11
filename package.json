@@ -1,5 +1,5 @@
 {
-  "name": "mophic",
+  "name": "morphic",
   "version": "0.1.0",
   "private": true,
   "license": "Apache-2.0",
@@ -40,14 +40,15 @@
     "next-themes": "^0.3.0",
     "ollama-ai-provider": "^0.7.0",
     "react": "^19.0.0-rc-3563387fe3-20240621",
-    "react-dom": "^19.0.0-rc-3563387fe3-20240621",
-    "react-icons": "^5.2.1",
-    "react-markdown": "^9.0.1",
+    "react-dom": "^18",
+    "react-icons": "^5.0.1",
+    "react-markdown": "^8.0.7",
+    "react-syntax-highlighter": "^15.5.0",
     "react-textarea-autosize": "^8.5.3",
     "rehype-external-links": "^3.0.0",
-    "rehype-katex": "^7.0.0",
-    "remark-gfm": "^4.0.0",
-    "remark-math": "^6.0.0",
+    "rehype-katex": "^6.0.0",
+    "remark-gfm": "^3.0.1",
+    "remark-math": "^5.1.1",
     "sonner": "^1.4.41",
     "tailwind-merge": "^2.2.2",
     "tailwindcss-animate": "^1.0.7",
@@ -61,6 +62,7 @@
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
     "eslint": "^8.57.0",
-    "eslint-config-next": "^15.0.0-rc.0"
+    "eslint-config-next": "^15.0.0-rc.0",
+    "@types/react-syntax-highlighter": "^15.5.13"
   }
 }

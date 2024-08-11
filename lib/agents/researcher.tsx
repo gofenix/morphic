@@ -26,8 +26,8 @@ export async function researcher(
   const includeToolResponses = messages.some(message => message.role === 'tool')
   const useSubModel = useOllamaProvider && includeToolResponses
 
-  const streambleAnswer = createStreamableValue<string>('')
-  const answerSection = <AnswerSection result={streambleAnswer.value} />
+  const streamableAnswer = createStreamableValue<string>('')
+  const answerSection = <AnswerSection result={streamableAnswer.value} />
 
   const currentDate = new Date().toLocaleString()
   const result = await streamText({
@@ -42,7 +42,7 @@ export async function researcher(
     onFinish: async event => {
       finishReason = event.finishReason
       fullResponse = event.text
-      streambleAnswer.done()
+      streamableAnswer.done()
     }
   }).catch(err => {
     hasError = true
@@ -71,7 +71,7 @@ export async function researcher(
           if (useAnthropicProvider && !hasToolResult) {
             streamableText.update(fullResponse)
           } else {
-            streambleAnswer.update(fullResponse)
+            streamableAnswer.update(fullResponse)
           }
         }
         break

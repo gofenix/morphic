@@ -8,6 +8,7 @@ import Footer from '@/components/footer-cosine'
 import { Sidebar } from '@/components/sidebar'
 import { Toaster } from '@/components/ui/sonner'
 import { AppStateProvider } from '@/lib/utils/app-state'
+import CozeBot from '@/components/coze'
 
 const fontSans = FontSans({
   subsets: ['latin'],
@@ -61,6 +62,7 @@ export default function RootLayout({
             <Sidebar />
             <Footer />
             <Toaster />
+            <CozeBot botId="7394086744209391651" bottom="40px" />
           </AppStateProvider>
         </ThemeProvider>
       </body>

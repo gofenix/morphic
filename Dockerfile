@@ -1,13 +1,15 @@
-FROM oven/bun:1.1.13-alpine
+
+FROM oven/bun:1.1.3-alpine
 
 RUN apk add --no-cache nodejs npm git
 
 WORKDIR /app
 
-COPY . .
-
+COPY package.json bun.lockb ./
 RUN bun install
 
-RUN bun run build
+COPY . .
 
-CMD ["bun", "start"]
+RUN bun next telemetry disable
+
+CMD ["bun", "dev", "-H", "0.0.0.0"]

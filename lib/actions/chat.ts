@@ -3,12 +3,11 @@
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { type Chat } from '@/lib/types'
-import { Redis } from '@upstash/redis'
+import { getRedisClient, RedisWrapper } from '@/lib/redis/config'
 
-const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL || '',
-  token: process.env.UPSTASH_REDIS_REST_TOKEN || ''
-})
+async function getRedis(): Promise<RedisWrapper> {
+  return await getRedisClient()
+}
 
 export async function getChats(userId?: string | null) {
   if (!userId) {
@@ -16,56 +15,89 @@ export async function getChats(userId?: string | null) {
   }
 
   try {
-    const pipeline = redis.pipeline()
-    const chats: string[] = await redis.zrange(`user:chat:${userId}`, 0, -1, {
+    const redis = await getRedis()
+    const chats = await redis.zrange(`user:chat:${userId}`, 0, -1, {
       rev: true
     })
 
-    for (const chat of chats) {
-      pipeline.hgetall(chat)
+    if (chats.length === 0) {
+      return []
     }
 
-    const results = await pipeline.exec()
+    const results = await Promise.all(
+      chats.map(async chatKey => {
+        const chat = await redis.hgetall(chatKey)
+        return chat
+      })
+    )
 
-    return results as Chat[]
+    return results
+      .filter((result): result is Record<string, any> => {
+        if (result === null || Object.keys(result).length === 0) {
+          return false
+        }
+        return true
+      })
+      .map(chat => {
+        const plainChat = { ...chat }
+        if (typeof plainChat.messages === 'string') {
+          try {
+            plainChat.messages = JSON.parse(plainChat.messages)
+          } catch (error) {
+            plainChat.messages = []
+          }
+        }
+        if (plainChat.createdAt && !(plainChat.createdAt instanceof Date)) {
+          plainChat.createdAt = new Date(plainChat.createdAt)
+        }
+        return plainChat as Chat
+      })
   } catch (error) {
     return []
   }
 }
 
 export async function getChat(id: string, userId: string = 'anonymous') {
-  try {
-    const chat = await redis.hgetall<Chat>(`chat:${id}`)
+  const redis = await getRedis()
+  const chat = await redis.hgetall<Chat>(`chat:${id}`)
 
-    if (!chat) {
-      return null
-    }
-
-    return chat
-  } catch (error) {
+  if (!chat) {
     return null
   }
+
+  // Parse the messages if they're stored as a string
+  if (typeof chat.messages === 'string') {
+    try {
+      chat.messages = JSON.parse(chat.messages)
+    } catch (error) {
+      chat.messages = []
+    }
+  }
+
+  // Ensure messages is always an array
+  if (!Array.isArray(chat.messages)) {
+    chat.messages = []
+  }
+
+  return chat
 }
 
 export async function clearChats(
   userId: string = 'anonymous'
 ): Promise<{ error?: string }> {
-  try {
-    const chats: string[] = await redis.zrange(`user:chat:${userId}`, 0, -1)
-    if (!chats.length) {
-      return { error: 'No chats to clear' }
-    }
-    const pipeline = redis.pipeline()
-
-    for (const chat of chats) {
-      pipeline.del(chat)
-      pipeline.zrem(`user:chat:${userId}`, chat)
-    }
-
-    await pipeline.exec()
-  } catch (error) {
-
+  const redis = await getRedis()
+  const chats = await redis.zrange(`user:chat:${userId}`, 0, -1)
+  if (!chats.length) {
+    return { error: 'No chats to clear' }
   }
+  const pipeline = redis.pipeline()
+
+  for (const chat of chats) {
+    pipeline.del(chat)
+    pipeline.zrem(`user:chat:${userId}`, chat)
+  }
+
+  await pipeline.exec()
 
   revalidatePath('/')
   redirect('/')
@@ -73,55 +105,50 @@ export async function clearChats(
 
 export async function saveChat(chat: Chat, userId: string = 'anonymous') {
   try {
+    const redis = await getRedis()
     const pipeline = redis.pipeline()
-    pipeline.hmset(`chat:${chat.id}`, chat)
-    pipeline.zadd(`user:chat:${chat.userId}`, {
-      score: Date.now(),
-      member: `chat:${chat.id}`
-    })
-    await pipeline.exec()
+
+    const chatToSave = {
+      ...chat,
+      messages: JSON.stringify(chat.messages)
+    }
+
+    pipeline.hmset(`chat:${chat.id}`, chatToSave)
+    pipeline.zadd(`user:chat:${userId}`, Date.now(), `chat:${chat.id}`)
+
+    const results = await pipeline.exec()
+
+    return results
   } catch (error) {
-
+    throw error
   }
-
-
 }
 
 export async function getSharedChat(id: string) {
-  try {
-    const chat = await redis.hgetall<Chat>(`chat:${id}`)
+  const redis = await getRedis()
+  const chat = await redis.hgetall<Chat>(`chat:${id}`)
 
-    if (!chat || !chat.sharePath) {
-      return null
-    }
-
-    return chat
-  } catch (error) {
+  if (!chat || !chat.sharePath) {
     return null
   }
 
-
+  return chat
 }
 
 export async function shareChat(id: string, userId: string = 'anonymous') {
-  try {
-    const chat = await redis.hgetall<Chat>(`chat:${id}`)
+  const redis = await getRedis()
+  const chat = await redis.hgetall<Chat>(`chat:${id}`)
 
-    if (!chat || chat.userId !== userId) {
-      return null
-    }
-
-    const payload = {
-      ...chat,
-      sharePath: `/share/${id}`
-    }
-
-    await redis.hmset(`chat:${id}`, payload)
-
-    return payload
-  } catch (error) {
+  if (!chat || chat.userId !== userId) {
     return null
   }
 
+  const payload = {
+    ...chat,
+    sharePath: `/share/${id}`
+  }
 
+  await redis.hmset(`chat:${id}`, payload)
+
+  return payload
 }

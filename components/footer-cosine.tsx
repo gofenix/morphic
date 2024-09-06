@@ -1,12 +1,6 @@
 import React from 'react'
 import Link from 'next/link'
-import {
-  SiDiscord,
-  SiGithub,
-  SiTwitter,
-  SiWechat,
-  SiXiaohongshu
-} from 'react-icons/si'
+import { SiWechat, SiXiaohongshu } from 'react-icons/si'
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 import {

@@ -17,6 +17,10 @@ const exampleMessages = [
   {
     heading: '劳动仲裁',
     message: '劳动仲裁'
+  },
+  {
+    heading: 'Summary: https://arxiv.org/pdf/2407.16833',
+    message: 'Summary: https://arxiv.org/pdf/2407.16833'
   }
 ]
 export function EmptyScreen({

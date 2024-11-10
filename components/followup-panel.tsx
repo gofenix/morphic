@@ -9,12 +9,20 @@ import { UserMessage } from './user-message'
 import { ArrowRight } from 'lucide-react'
 import { createClient } from '@/utils/supabase/client'
 import { useAppState } from '@/lib/utils/app-state'
+import { useLocalStorage } from '@/lib/hooks/use-local-storage'
+import { models } from '@/lib/types/models'
+import { getDefaultModelId } from '@/lib/utils'
 
 export function FollowupPanel() {
   const [input, setInput] = useState('')
   const { submit } = useActions()
   const [, setMessages] = useUIState<typeof AI>()
   const { isGenerating, setIsGenerating } = useAppState()
+
+  const [selectedModelId] = useLocalStorage<string>(
+    'selectedModel',
+    getDefaultModelId(models)
+  )
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -25,6 +33,8 @@ export function FollowupPanel() {
     setInput('')
 
     const formData = new FormData(event.currentTarget as HTMLFormElement)
+    // Add model information to formData
+    formData.set('model', selectedModelId)
 
     const userMessage = {
       id: Date.now(),

@@ -2,12 +2,13 @@ import { createStreamableUI, createStreamableValue } from 'ai/rsc'
 import { CoreMessage, streamObject } from 'ai'
 import { PartialRelated, relatedSchema } from '@/lib/schema/related'
 import SearchRelated from '@/components/search-related'
-import { getModel } from '../utils'
+import { getModel } from '../utils/registry'
 import querySuggestorPrompt from '@/prompts/query-suggestor'
 
 export async function querySuggestor(
   uiStream: ReturnType<typeof createStreamableUI>,
-  messages: CoreMessage[]
+  messages: CoreMessage[],
+  model: string
 ) {
   const objectStream = createStreamableValue<PartialRelated>()
   uiStream.append(<SearchRelated relatedQueries={objectStream.value} />)
@@ -21,7 +22,7 @@ export async function querySuggestor(
 
   let finalRelatedQueries: PartialRelated = {}
   await streamObject({
-    model: getModel(),
+    model: getModel(model),
     system: querySuggestorPrompt,
     messages: lastMessages,
     schema: relatedSchema

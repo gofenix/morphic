@@ -12,6 +12,7 @@ import {
 import { AI } from '@/app/actions'
 import { UserMessage } from './user-message'
 import { PartialRelated } from '@/lib/schema/related'
+import { createClient } from '@/utils/supabase/client'
 import { Section } from './section'
 import { Skeleton } from './ui/skeleton'
 import { useLocalStorage } from '@/lib/hooks/use-local-storage'
@@ -67,6 +68,24 @@ export const SearchRelated: React.FC<SearchRelatedProps> = ({
       userMessage,
       responseMessage
     ])
+
+    const supabase = createClient()
+    const {
+      data: { user }
+    } = await supabase.auth.getUser()
+
+    if (user) {
+      await supabase
+        .from('morphic_used')
+        .insert([
+          {
+            user_id: user.id,
+            email: user.email,
+            send_message: query
+          }
+        ])
+        .select()
+    }
   }
 
   return related ? (
